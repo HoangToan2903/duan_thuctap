@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Accounts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/5a213e1813.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+         span.error{
+            color: red;
+            margin-left: 5px;
+        }
+        li {
+            margin: 0 5px;
+        }
+
+<!--        .page-item a {-->
+<!--            padding: 10px;-->
+<!--            text-align: center;-->
+<!--            list-style: none;-->
+<!--        }-->
+
+        .page-item a {
+            background-color: white;
+            padding: 8px 15px;
+            display: inline-block;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        li.active a{
+            background-color: #5CB85C !important;
+            color: white !important;
+        }
+
+        #edit,
+        #addNew {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            display: none;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        a.active {
+            border: 0;
+            border-bottom: #5CB85C 2px solid;
+            color: black;
+        }
+
+        @media only screen and (max-width: 1015px) {
+            #search, #manage {
+                width: 100%;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            #dropdownRole {
+                width:60%;
+            }
+            #btnAdd{
+                width:40%;
+            }
+        }
+         .title-footer{
+             font-size: 18px;
+         }
+         footer{
+             font-size: 13px;
+             margin-top: 20px;
+         }
+         ul {
+             list-style: none;
+         }
+         a{
+             text-decoration: none;
+             color: #5CB85C;
+         }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-sm">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <a class="navbar-brand" th:href="@{/admin}"><img
+                    src="https://img.freepik.com/premium-vector/organic-icon-100-percent-organic-product-label_349999-1003.jpg?w=2000"
+                    alt="brand_icon" width="100"></a>
+            <div class="collapse navbar-collapse ms-3" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/product}">SẢN PHẨM</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/sale}">BÁN HÀNG</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/orders}">ĐƠN HÀNG</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/category}">DANH MỤC</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/suppliers}">NHÀ CUNG CẤP</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/import}">NHẬP HÀNG</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/admin/list-account}">QUẢN LÝ TÀI KHOẢN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/statistic}">THỐNG KÊ</a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <!--            <div class="dropdown me-5">-->
+            <!--                <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown"  aria-expanded="false">-->
+            <!--                    Hi, <span th:text="${loggedInUser.lastName}"></span>-->
+            <!--                    <span th:text="${loggedInUser.firstName}"></span>-->
+            <!--                </button>-->
+            <!--                <ul class="dropdown-menu dropdown-menu-end">-->
+            <!--                    <li><a class="dropdown-item"  th:href="@{/admin/profile}">Thông tin cá nhân</a></li>-->
+            <!--                    <li><hr class="dropdown-divider"></li>-->
+            <!--                    <li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>-->
+            <!--                </ul>-->
+            <!--            </div>-->
+
+            <div class="dropdown me-4">
+                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Hi, <span th:text="${loggedInUser.lastName}"></span>
+                    <span th:text="${loggedInUser.firstName}"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" th:href="@{/admin/profile}">Thông tin cá nhân</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+<div class="px-5">
+    <div class="row align-middle mt-4 mb-4">
+        <div class="col-2" id="manage">
+            <h4 style="color: #5CB85C;">Quản lý tài khoản</h4>
+        </div>
+<!--        <div class="col-5" id="search">-->
+<!--            <form class="d-flex" role="search">-->
+<!--                <input class="form-control me-2" type="search" placeholder="Tìm tài khoản..." aria-label="Search">-->
+<!--                <button style="background-color: #5CB85C; color:white;" class="btn btn-outline-success border-0"-->
+<!--                        type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>-->
+<!--            </form>-->
+<!--        </div>-->
+
+        <div class="col-2" id="dropdownRole">
+            <div class="form-group form-inline">
+                <select id="vaiTro" class="form-control form-select">
+                    <option th:each="role : ${listRole}" th:value="${role.roleName}"
+                            th:text="${role.roleName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-8 text-end" id="btnAdd">
+            <div class="d-flex float-end">
+                <button style="background-color: #5CB85C; color:white;vertical-align: middle;" type="button"
+                        class="btn btn-success shadow-sm border-0 btnThemTaiKhoan" data-bs-toggle="modal"
+                        data-bs-target="#taiKhoanModal">
+                    Thêm mới<i style="font-size: 23px; vertical-align: middle;"
+                                class="fa-solid fa-square-plus ms-3"></i></button>
+                <div id="btnBlackList" class="ms-3">
+                    <a th:href="@{/admin/list-blacklist-account}">
+                        <button type="button" class="btn btn-outline-secondary">Thùng rác<i class="fa-solid fa-trash-can ms-3"></i></button>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <table class="table text-center align-middle border taiKhoanTable">
+        <thead class="table-secondary">
+        <tr>
+            <th scope="col-1">Mã tài khoản</th>
+            <th scope="col-2">Tên</th>
+            <th scope="col-1">Họ</th>
+            <th scope="col-2">Email</th>
+            <th scope="col-1">Số điện thoại</th>
+            <th scope="col-3">Địa chỉ</th>
+            <th scope="col-1">Vai trò</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody class="list">
+
+        </tbody>
+    </table>
+
+</div>
+<!--<div style="position: sticky; top:100%; margin:0 auto;">-->
+<!--    <ul class="listPage">-->
+<!--        <li class="active">1</li>-->
+<!--        <li>2</li>-->
+<!--        <li>3</li>-->
+<!--    </ul>-->
+<!--</div>-->
+<div class="container d-flex align-items-center justify-content-center">
+    <ul class="pagination">
+    </ul>
+</div>
+
+<!-- MODAL ADD USER -->
+<div class="row col-md-9">
+    <form class="taiKhoanForm" id="form">
+        <div>
+            <div class="modal fade" id="taiKhoanModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Tạo mới tài
+                                khoản</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+<!--                            <div class="form-group">-->
+<!--                                 <input type="hidden" class="form-control" name="id" /> -->
+<!--                            </div>-->
+                            <div class="form-group">
+                                <label for="name">Email: <span style="color: red;">(*)</span></label>
+                                <input type="email" class="form-control" name="email" placeholder="Nhập email" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Mật khẩu:(8-32 ký tự) <span style="color: red;">(*)</span></label>
+                                <input type="password" class="form-control" name="password" placeholder="Nhập mật khẩu" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Nhắc lại mật khẩu: <span style="color: red;">(*)</span></label>
+                                <input type="password" class="form-control" name="confirmPassword" placeholder="Nhập lại mật khẩu" required/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Chọn vai trò: </label>
+                                <div th:each="role : ${listRole}">
+                                    <label class="radio-inline">
+                                        <input type="radio"
+                                               name="roleName"
+                                               th:value="${role.roleName}"
+                                               checked="checked"/>
+                                        [[${role.roleName}]]
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Họ: <span style="color: red;">(*)</span></label>
+                                <input type="text" class="form-control" name="lastName" placeholder="Nhập Họ và tên lót" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Tên: <span style="color: red;">(*)</span></label>
+                                <input type="text" class="form-control" name="firstName" placeholder="Nhập tên" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Số điện thoại: <span style="color: red;">(*)</span></label>
+                                <input type="text" class="form-control" name="phone" placeholder="Nhập SĐT" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Địa chỉ: <span style="color: red;">(*)</span></label>
+                                <input type="text" class="form-control" name="address" placeholder="Nhập địa chỉ" required/>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Hủy</button>
+                            <input class="btn btn-primary" id="btnSubmit" type="button" value="Xác nhận"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<footer>
+    <div class="row" style="background-color: #333; color:white; padding: 15px 200px;">
+        <div class="col-6">
+            <div class="title-footer"><span>Giới thiệu</span></div>
+            <hr>
+            <p>
+                ORGANIC - Chuyên cung cấp tất cả các mặt hàng rau củ quả sạch, không chất bảo quản, an toàn cho sức khoẻ, đáp ứng nhu cầu của tất cả khách hàng.
+            </p>
+            <p>
+                <i class="fa fa-phone"></i> <span class="margin-left-md me-3">0935708386</span>
+                <i class="fa fa-envelope margin-left-xl"></i> <span class="margin-left-md">vegetablestore@gmail.com
+          </span>
+            </p>
+            <ul class="list-inline d-flex">
+                <li><a href="#">Quyền riêng tư</a></li>
+                <li class="mx-3"><a href="#">Điều khoản</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+
+        </div>
+        <div class="col-3">
+            <div class="title-footer"><span>Phương thức thanh toán</span></div>
+            <hr>
+            <p>Hỗ trợ thanh toán qua VNQR-Pay, Paypal, Online Banking và các loại thẻ tín dụng</p>
+            <img class="img-responsive" src="https://misolhouse.com/themes/default/shop/assets//images/payment-methods.png" alt="Payment Methods" width="250">
+
+
+
+        </div>
+        <div class="col-3">
+            <div class="title-footer"><span>Theo dõi</span></div>
+            <hr>
+            <p>Theo dõi trực tiếp các trang của chúng tôi trên mạng xã hội</p>
+            <ul class="follow-us d-flex p-0">
+                <li class="me-3"><a target="_blank" href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a target="_blank" href="#"><i class="fa fa-instagram"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row bg-dark text-white" style="height: 50px; padding:15px 200px">
+        <div class="copyright line-height-lg col">
+            &copy; 2023 ORGANIC
+        </div>
+        <div class="col">Shop thực phẩm sạch số 1 Đà Nẵng - Luôn tươi ngon mỗi ngày!  </div>
+    </div>
+
+</footer>
+<script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/2.9.0/jquery.serializejson.js"></script>
+
+<script th:src="@{/js/taiKhoanAjax.js}"></script>
+</body>
+</html>

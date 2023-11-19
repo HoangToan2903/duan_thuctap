@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products_Info</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/5a213e1813.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+    .title-footer{
+        font-size: 18px;
+    }
+    footer{
+        font-size: 13px;
+        margin-top: 20px;
+    }
+    ul {
+        list-style: none;
+    }
+    a{
+        text-decoration: none;
+        color: #5CB85C;
+    }
+    ul > li {
+        margin: 0 10px;
+    }
+
+    .listPage {
+        padding: 10px;
+        text-align: center;
+        list-style: none;
+        margin: 0 auto;
+    }
+
+    .listPage li {
+        background-color: white;
+        padding: 10px 20px;
+        display: inline-block;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+    .listPage .active {
+        background-color: #5CB85C;
+        color: white;
+    }
+    .listPage2 {
+        padding: 10px;
+        text-align: center;
+        list-style: none;
+        margin: 0 auto;
+    }
+
+    .listPage2 li {
+        background-color: white;
+        padding: 10px 20px;
+        display: inline-block;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+    .listPage2 .active {
+        background-color: #5CB85C;
+        color: white;
+    }
+    div.description {
+        padding: 20px 30px;
+        height: 250px;
+        overflow: auto;
+        border: 0.5px solid;
+        border-radius: 10px;
+    }
+
+    .choose {
+        border: 0;
+        border-bottom: #5CB85C 2px solid;
+        color: black;
+    }
+
+    @media only screen and (max-width: 970px) {
+        #review {
+            width: 100%;
+        }
+    }
+    .nav-link {
+        color: black;
+    }
+    .star{
+        color: #FFD700;
+    }
+</style>
+
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-sm">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" th:href="@{/admin}"><img id="imgBr"
+                                                         src="https://img.freepik.com/premium-vector/organic-icon-100-percent-organic-product-label_349999-1003.jpg?w=2000"
+                                                         alt="brand_icon" width="100px"></a>
+
+
+        <div class="collapse navbar-collapse ms-3" id="navbarTogglerDemo02">
+            <ul class="navbar-nav me-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link choose" th:href="@{/admin/product}">SẢN PHẨM</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/sale}">BÁN HÀNG</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/orders}">ĐƠN HÀNG</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/category}">DANH MỤC</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/suppliers}">NHÀ CUNG CẤP</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/import}">NHẬP HÀNG</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/list-account}">QUẢN LÝ TÀI KHOẢN</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/statistic}">THỐNG KÊ</a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="dropdown me-4">
+            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Hi, <span th:text="${loggedInUser.lastName}"></span>
+                <span th:text="${loggedInUser.firstName}"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" th:href="@{/admin/profile}">Thông tin cá nhân</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+<div th:object="${productInfo}">
+    <div style="display: flex; background-color: #5CB85C; color:white;">
+        <div class="py-3 px-5">
+            <h5>Quản lý sản phẩm / [[*{productName}]]</h5>
+        </div>
+    </div>
+
+    <div class="row px-5 py-3 gx-5">
+        <div class="col">
+            <div class="row">
+                <div class="col-6" id="info">
+                    <img th:src="@{'/images/'+ ${productInfo.productID} + '/' +${productInfo.img}}" width="300"
+                         height="300">
+
+                </div>
+                <div class="col">
+                    <h3 class="mt-3 mb-5">[[*{productName}]]</h3>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="mb-4">Giá bán</h6>
+                            <h6 class="mb-4">Khối lượng</h6>
+                            <h6 class="mb-4">Số lượng</h6>
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <p class="mb-4">[[*{#numbers.formatDecimal(price, 1 , 'POINT', 0 , 'DEFAULT')}]] ₫</p>
+                            <p class="mb-4">[[*{unit}]]</p>
+                            <p class="mb-4">[[*{quantity}]]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2 d-flex">
+                <div class="d-flex"><span class="me-1" th:text="${starAvg}"></span>
+                    <div id="star-rating">
+                        <span class="star" data-rating="5"></span>
+                        <span class="star" data-rating="4"></span>
+                        <span class="star" data-rating="3"></span>
+                        <span class="star" data-rating="2"></span>
+                        <span class="star" data-rating="1"></span>
+                    </div>
+                </div>
+                <div class="mx-3"><span th:text="${quantityReview}"></span> Đánh giá</div>
+                <div><span th:text="${sumQuantity}"></span> Đã bán</div>
+            </div>
+
+            <div class="mt-3">
+                <h6>Mô tả sản phẩm</h6>
+                <div class="description">
+                    <p>
+                        [[*{description}]]
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 mt-3" id="review">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><h6>Đánh giá về sản phẩm</h6></button>
+                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><h6>Thắc mắc về sản phẩm</h6></button>
+                </div>
+            </nav>
+
+            <!--Đánh giá về sản phẩm-->
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                    <div class="list border p-2 pb-0" id="list">
+
+                        <div class="item border mb-2 p-3" th:each="review : ${reviewAll}"
+                             th:if="${review.replyID == null} and ${review.star > 0}">
+                            <div class="row">
+                                <div class="col-1">
+                                    <div style="width:50px; height:50px;" class="rounded-circle border text-center">
+                                        <h5 style="color: #5cb85c; line-height:50px; display: inline-flex;">
+                                            <span th:text="${review.user.firstName.charAt(0)}"></span>
+                                            <span th:text="${review.user.lastName.charAt(0)}"></span></h5></div>
+                                </div>
+                                <div class="col-7">
+                                    <div class="ms-3">
+                                        <h6 th:text="${review.user.fullName}"></h6>
+                                        <p th:text="${#dates.format(review.postDate, 'dd-MM-yyyy HH:mm:ss')}"></p>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-end" style="color:#ddd;">
+                                    <div style="width:108px; float:right;" id="star">
+                                        <p style="display: none" th:text="${review.star}"></p>
+                                        <i class="fa-solid fa-star" id="1"></i>
+                                        <i class="fa-solid fa-star" id="2"></i>
+                                        <i class="fa-solid fa-star" id="3"></i>
+                                        <i class="fa-solid fa-star" id="4"></i>
+                                        <i class="fa-solid fa-star" id="5"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p class="m-0" th:text="${review.content}"></p>
+                            </div>
+                            <div class="text-end">
+
+                                <div id="pills-tab" role="tablist">
+                                    <button class="border-0 me-2" type="button" th:id="'pills-home-tab' + ${review.reviewID}"
+                                            data-bs-toggle="pill" th:data-bs-target="'#pills-home' + ${review.reviewID}" role="tab"
+                                            th:aria-controls="'pills-home' + ${review.reviewID}">
+                                        Phản hồi
+                                    </button>
+                                    <a th:href="'/admin/productInfo/' + ${review.product.productID} + '/delete/' + ${review.reviewID}">
+                                        <button class="border-0" th:if="${review.user.id} == ${loggedInUser.id}">Xoá</button>
+                                    </a>
+                                </div>
+
+                                <div class="tab-content mt-2" id="pills-tabContent">
+                                    <div class="tab-pane fade show " th:id="'pills-home' + ${review.reviewID}" role="tabpanel"
+                                         th:aria-labelledby="'pills-home-tab' + ${review.reviewID}" tabindex="0">
+                                        <div class="ps-4 border-start">
+                                            <th:block th:each="reply : ${review.reviewsList}"
+                                                      th:if="${reply.replyID.reviewID == review.reviewID}">
+                                                <div class="border p-3">
+                                                    <div class="row text-start">
+                                                        <div class="col-1">
+                                                            <div style="width:50px; height:50px;" class="rounded-circle border text-center">
+                                                                <h5 style="color: #5cb85c; line-height:50px; display: inline-flex;">
+                                                                    <span th:text="${reply.user.firstName.charAt(0)}"></span>
+                                                                    <span th:text="${reply.user.lastName.charAt(0)}"></span></h5></div>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <div class="ms-3">
+                                                                <h6 th:text="${reply.user.fullName}"></h6>
+                                                                <p th:text="${#dates.format(reply.postDate, 'dd-MM-yyyy HH:mm:ss')}"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4 text-end">
+                                                            <a th:href="'/admin/productInfo/' + ${review.product.productID} + '/delete/' + ${reply.reviewID}">
+                                                                <button class="border-0" th:if="${review.user.id} == ${loggedInUser.id}">Xoá</button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1 text-start">
+                                                        <p th:text="${reply.content}"></p>
+                                                    </div>
+                                                </div>
+
+                                            </th:block>
+                                        </div>
+
+
+                                        <div class="input-group mt-2">
+                                            <form class="w-100 d-flex" method="post"
+                                                  th:action="'/admin/productInfo/'+ ${productInfo.productID} +'/newReply'"
+                                                  th:object="${addNew}">
+                                                <input type="text" th:value="${loggedInUser.id}" name="user"
+                                                       style="display: none">
+                                                <input type="text" th:value="${review.reviewID}" name="replyID"
+                                                       style="display: none">
+                                                <input type="text" th:value="${productInfo.productID}" name="product"
+                                                       style="display: none">
+                                                <input type="text" class="form-control" th:field="*{content}"
+                                                       th:id="'reply' + ${review.reviewID}"
+                                                       th:onchange="'enterReply('+${review.reviewID}+')'" required>
+                                                <button class="btn btn-primary" type="submit"
+                                                        th:id="'submitReply' + ${review.reviewID}" disabled><i
+                                                        class="fa-solid fa-paper-plane"></i></button>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div style="position: sticky; top:100%; margin:0 auto;">
+                        <ul class="listPage">
+                            <li class="active">1</li>
+                            <li>2</li>
+                            <li>3</li>
+                        </ul>
+
+                    </div>
+                </div>
+                  <!--Thắc mắc về sản phẩm-->
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                    <div class="list2 border p-2 pb-0">
+
+                        <div class="item2 border mb-2 p-3" th:each="review : ${reviewAll}"
+                             th:if="${review.replyID == null} and ${review.star == null}">
+                            <div class="row">
+                                <div class="col-1">
+                                    <div style="width:50px; height:50px;" class="rounded-circle border text-center">
+                                        <h5 style="color: #5cb85c; line-height:50px; display: inline-flex;">
+                                            <span th:text="${review.user.firstName.charAt(0)}"></span>
+                                            <span th:text="${review.user.lastName.charAt(0)}"></span></h5></div>
+                                </div>
+                                <div class="col-7">
+                                    <div class="ms-3">
+                                        <h6 th:text="${review.user.fullName}"></h6>
+                                        <p th:text="${#dates.format(review.postDate, 'dd-MM-yyyy HH:mm:ss')}"></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <p class="m-0" th:text="${review.content}"></p>
+                            </div>
+                            <div class="text-end">
+
+                                <div role="tablist">
+                                    <button class="border-0 me-2" type="button" th:id="'pills-home-tab' + ${review.reviewID}"
+                                            data-bs-toggle="pill" th:data-bs-target="'#pills-home' + ${review.reviewID}" role="tab"
+                                            th:aria-controls="'pills-home' + ${review.reviewID}">
+                                        Phản hồi
+                                    </button>
+                                    <a th:href="'/admin/productInfo/' + ${review.product.productID} + '/delete/' + ${review.reviewID}">
+                                        <button class="border-0" th:if="${review.user.id} == ${loggedInUser.id}">Xoá</button>
+                                    </a>
+                                </div>
+
+                                <div class="tab-content mt-2">
+                                    <div class="tab-pane fade show " th:id="'pills-home' + ${review.reviewID}" role="tabpanel"
+                                         th:aria-labelledby="'pills-home-tab' + ${review.reviewID}" tabindex="0">
+                                        <div class="ps-4 border-start">
+                                            <th:block th:each="reply : ${review.reviewsList}"
+                                                      th:if="${reply.replyID.reviewID == review.reviewID}">
+                                                <div class="border p-3">
+                                                    <div class="row text-start">
+                                                        <div class="col-1">
+                                                            <div style="width:50px; height:50px;" class="rounded-circle border text-center">
+                                                                <h5 style="color: #5cb85c; line-height:50px; display: inline-flex;">
+                                                                    <span th:text="${reply.user.firstName.charAt(0)}"></span>
+                                                                    <span th:text="${reply.user.lastName.charAt(0)}"></span></h5></div>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <div class="ms-3">
+                                                                <h6 th:text="${reply.user.fullName}"></h6>
+                                                                <p th:text="${#dates.format(reply.postDate, 'dd-MM-yyyy HH:mm:ss')}"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4 text-end">
+                                                            <a th:href="'/admin/productInfo/' + ${review.product.productID} + '/delete/' + ${reply.reviewID}">
+                                                                <button class="border-0" th:if="${review.user.id} == ${loggedInUser.id}">Xoá</button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1 text-start">
+                                                        <p th:text="${reply.content}"></p>
+                                                    </div>
+                                                </div>
+
+                                            </th:block>
+                                        </div>
+
+
+                                        <div class="input-group mt-2">
+                                            <form class="w-100 d-flex" method="post"
+                                                  th:action="'/admin/productInfo/'+ ${productInfo.productID} +'/newReply'"
+                                                  th:object="${addNew}">
+                                                <input type="text" th:value="${loggedInUser.id}" name="user"
+                                                       style="display: none">
+                                                <input type="text" th:value="${review.reviewID}" name="replyID"
+                                                       style="display: none">
+                                                <input type="text" th:value="${productInfo.productID}" name="product"
+                                                       style="display: none">
+                                                <input type="text" class="form-control" th:field="*{content}"
+                                                       th:id="'reply' + ${review.reviewID}"
+                                                       th:onchange="'enterReply('+${review.reviewID}+')'" required>
+                                                <button class="btn btn-primary" type="submit"
+                                                        th:id="'submitReply' + ${review.reviewID}" disabled><i
+                                                        class="fa-solid fa-paper-plane"></i></button>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div style="position: sticky; top:100%; margin:0 auto;">
+                <ul class="listPage2">
+                    <li class="active">1</li>
+                    <li>2</li>
+                    <li>3</li>
+                </ul>
+            </div>
+
+            <div style="position: sticky; top:100%; margin:0 auto;">
+                <ul class="listPage">
+                    <li class="active">1</li>
+                    <li>2</li>
+                    <li>3</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="row" style="background-color: #333; color:white; padding: 15px 200px;">
+        <div class="col-6">
+            <div class="title-footer"><span>Giới thiệu</span></div>
+            <hr>
+            <p>
+                ORGANIC - Chuyên cung cấp tất cả các mặt hàng rau củ quả sạch, không chất bảo quản, an toàn cho sức khoẻ, đáp ứng nhu cầu của tất cả khách hàng.
+            </p>
+            <p>
+                <i class="fa fa-phone"></i> <span class="margin-left-md me-3">0935708386</span>
+                <i class="fa fa-envelope margin-left-xl"></i> <span class="margin-left-md">vegetablestore@gmail.com
+          </span>
+            </p>
+            <ul class="list-inline d-flex">
+                <li><a href="#">Quyền riêng tư</a></li>
+                <li class="mx-3"><a href="#">Điều khoản</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+
+        </div>
+        <div class="col-3">
+            <div class="title-footer"><span>Phương thức thanh toán</span></div>
+            <hr>
+            <p>Hỗ trợ thanh toán qua VNQR-Pay, Paypal, Online Banking và các loại thẻ tín dụng</p>
+            <img class="img-responsive" src="https://misolhouse.com/themes/default/shop/assets//images/payment-methods.png" alt="Payment Methods" width="250">
+
+
+
+        </div>
+        <div class="col-3">
+            <div class="title-footer"><span>Theo dõi</span></div>
+            <hr>
+            <p>Theo dõi trực tiếp các trang của chúng tôi trên mạng xã hội</p>
+            <ul class="follow-us d-flex p-0">
+                <li class="me-3"><a target="_blank" href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a target="_blank" href="#"><i class="fa fa-instagram"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row bg-dark text-white" style="height: 50px; padding:15px 200px">
+        <div class="copyright line-height-lg col">
+            &copy; 2023 ORGANIC
+        </div>
+        <div class="col">Shop thực phẩm sạch số 1 Đà Nẵng - Luôn tươi ngon mỗi ngày!  </div>
+    </div>
+
+</footer>
+</body>
+<script th:inline="javascript">
+    let thisPage = 1;
+    let limit = 5;
+    let list = document.querySelectorAll('.list .item');
+
+    function loadItem() {
+        let beginGet = limit * (thisPage - 1);
+        let endGet = limit * thisPage - 1;
+        list.forEach((item, key) => {
+            if (key >= beginGet && key <= endGet) {
+                item.style.display = 'block';
+
+            } else {
+                item.style.display = 'none';
+            }
+        })
+        listPage();
+
+    }
+
+    loadItem();
+
+    function listPage() {
+        let count = Math.ceil(list.length / limit);
+        document.querySelector('.listPage').innerHTML = '';
+
+        if (thisPage != 1) {
+            let prev = document.createElement('li');
+            prev.innerHTML = '<i class="fa-solid fa-angles-left"></i>';
+            prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
+            document.querySelector('.listPage').appendChild(prev);
+        }
+
+        for (i = 1; i <= count; i++) {
+            let newPage = document.createElement('li');
+            newPage.innerText = i;
+            if (i == thisPage) {
+                newPage.classList.add('active');
+            }
+            newPage.setAttribute('onclick', "changePage(" + i + ")");
+            document.querySelector('.listPage').appendChild(newPage);
+        }
+        if (thisPage != count) {
+            let next = document.createElement('li');
+            next.innerHTML = '<i class="fa-solid fa-angles-right"></i>';
+            next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
+            document.querySelector('.listPage').appendChild(next);
+        }
+    }
+
+    function changePage(i) {
+        thisPage = i;
+        loadItem();
+    }
+
+
+    /*Hiển thị sao đánh giá*/
+    let item = document.getElementById("list").children
+    let count = item.length;
+
+    for (let i = 0; i < count; i++) {
+        let perItem = item[i].children;
+        let row1 = perItem[0].children;
+        let col3 = row1[2].children;
+        let review = col3[0].children;
+
+        let star = review[0].innerText;
+        if (star > 0) {
+            for (let j = 1; j <= star; j++) {
+                review[j].style.color = "#FFD700";
+            }
+        } else {
+            for (let j = 0; j < 6; j++) {
+                review[j].style.display = "none";
+            }
+        }
+    }
+
+    function enterReply(a){
+        let reply = document.getElementById('reply'+a).value;
+        if ((/^\s*$/.test(reply))){
+            document.getElementById('submitReply'+a).disabled = true;
+        }
+        else {
+            document.getElementById('submitReply'+a).disabled = false;
+        }
+    }
+
+    // Set the rating value dynamically based on your data
+    const ratingValue = [[${starAvg}]]; // Replace with your actual rating value
+
+    // Get the star rating container element
+    const starRatingContainer = document.getElementById("star-rating");
+
+    // Calculate the number of filled stars
+    const filledStars = Math.floor(ratingValue);
+    // Calculate the number of half-filled star
+    const halfFilledStar = Math.round(ratingValue - filledStars);
+
+    // Loop through each star element and set the appropriate data-rating attribute
+    const stars = starRatingContainer.querySelectorAll(".star");
+    stars.forEach((star, index) => {
+        if (index < filledStars) {
+            star.innerHTML = '<i class="fa-solid fa-star"></i>';
+        } else if (index === filledStars && halfFilledStar === 1) {
+            star.innerHTML = '<i class="fa-solid fa-star-half-stroke"></i>';
+        } else {
+            star.innerHTML = '<i class="fa-regular fa-star"></i>';
+        }
+    });
+</script>
+<script>
+    let thisPage2 = 1;
+    let limit2 = 5;
+    let list2 = document.querySelectorAll('.list2 .item2');
+
+    function loadItem2() {
+        let beginGet = limit2 * (thisPage2 - 1);
+        let endGet = limit2 * thisPage2 - 1;
+        list2.forEach((item, key) => {
+            if (key >= beginGet && key <= endGet) {
+                item.style.display = 'block';
+
+            } else {
+                item.style.display = 'none';
+            }
+        })
+        listPage2();
+
+    }
+
+    loadItem2();
+
+    function listPage2() {
+        let count = Math.ceil(list2.length / limit2);
+        document.querySelector('.listPage2').innerHTML = '';
+
+        if (thisPage2 != 1) {
+            let prev = document.createElement('li');
+            prev.innerHTML = '<i class="fa-solid fa-angles-left"></i>';
+            prev.setAttribute('onclick', "changePage2(" + (thisPage2 - 1) + ")");
+            document.querySelector('.listPage2').appendChild(prev);
+        }
+
+        for (let i = 1; i <= count; i++) {
+            let newPage = document.createElement('li');
+            newPage.innerText = i;
+            if (i == thisPage2) {
+                newPage.classList.add('active');
+            }
+            newPage.setAttribute('onclick', "changePage2(" + i + ")");
+            document.querySelector('.listPage2').appendChild(newPage);
+        }
+        if (thisPage2 != count) {
+            let next = document.createElement('li');
+            next.innerHTML = '<i class="fa-solid fa-angles-right"></i>';
+            next.setAttribute('onclick', "changePage2(" + (thisPage2 + 1) + ")");
+            document.querySelector('.listPage2').appendChild(next);
+        }
+    }
+
+    function changePage2(i) {
+        thisPage2 = i;
+        loadItem2();
+    }
+</script>
+</html>
